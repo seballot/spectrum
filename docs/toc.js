@@ -59,7 +59,7 @@ $.fn.toc = function(options) {
     }, 50);
   };
   if (opts.highlightOnScroll) {
-    $(window).bind('scroll', highlightOnScroll);
+    $(window).on('scroll', highlightOnScroll);
     highlightOnScroll();
   }
 
@@ -80,7 +80,7 @@ $.fn.toc = function(options) {
       var a = $('<a/>')
       .text($h.text())
       .attr('href', '#' + anchorName)
-      .bind('click', scrollTo);
+      .on('click', scrollTo);
 
       var li = $('<li/>')
       .addClass(opts.prefix+'-'+$h[0].tagName.toLowerCase())

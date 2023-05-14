@@ -48,7 +48,11 @@ module.exports = function(grunt) {
       scss: { // Provide scss file as well see https://github.com/seballot/spectrum/issues/5 
         src: ['src/spectrum.css'],
         dest: 'dist/spectrum.scss',
-      }
+      },
+      svg: {
+        src: ['src/spectrum.svg'],
+        dest: 'dist/spectrum.svg',
+      },
     },
 
     uglify: {
@@ -70,6 +74,26 @@ module.exports = function(grunt) {
           ext: '.min.css'
         }]
       }
+    },
+
+    svg_sprite: {
+      options: {
+      },
+      dist: {
+        expand: true,
+        cwd: 'src/icons',
+        src: ['*.svg'],
+        dest: 'src',
+        options: {
+          mode: {
+            view: {
+              dest: "",
+              sprite: "spectrum.svg",
+              bust: false,
+            }
+          }
+        }
+      },
     },
 
     watch: {
@@ -134,6 +158,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-svg-sprite');
 
   // Testing tasks
   grunt.registerTask('test', ['jshint', 'qunit']);
@@ -146,6 +171,9 @@ module.exports = function(grunt) {
 
   //Build Task.
   grunt.registerTask('build', ['jshint', 'concat', 'uglify', 'cssmin']);
+
+  //Build sprite Task.
+  grunt.registerTask('build-sprite', ['svg_sprite']);
 
   // Dev task.
   grunt.registerTask('dev', ['connect', 'watch']);

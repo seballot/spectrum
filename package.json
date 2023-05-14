@@ -34,6 +34,7 @@
         "grunt-contrib-qunit": "^7.0.0",
         "grunt-contrib-uglify": "^5.2.2",
         "grunt-contrib-watch": "^1.1.0",
+        "grunt-svg-sprite": "^2.0.2",
         "qunit": "^2.19.4"
     }
 }

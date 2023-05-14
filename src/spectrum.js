@@ -138,21 +138,36 @@
     })();
 
     function paletteTemplate (p, color, className, opts) {
-        var html = [];
+        var html = $('<div></div>').addClass('sp-cf ' + className);
         for (var i = 0; i < p.length; i++) {
             var current = p[i];
+            var spanOuter = $('<span></span>');
+            var spanInner = $('<span></span>');
             if(current) {
                 var tiny = tinycolor(current);
                 var c = tiny.toHsl().l < 0.5 ? "sp-thumb-el sp-thumb-dark" : "sp-thumb-el sp-thumb-light";
                 c += (tinycolor.equals(color, current)) ? " sp-thumb-active" : "";
                 var formattedString = tiny.toString(opts.preferredFormat || "rgb");
-                var swatchStyle = rgbaSupport ? ("background-color:" + tiny.toRgbString()) : "filter:" + tiny.toFilter();
-                html.push('<span title="' + formattedString + '" data-color="' + tiny.toRgbString() + '" class="' + c + '" role="button" tabindex="0"><span class="sp-thumb-inner" style="' + swatchStyle + ';"></span></span>');
+                var swatchStyle = rgbaSupport ? {'background-color': tiny.toRgbString()} : {'filter': tiny.toFilter()};
+
+                spanInner.addClass('sp-thumb-inner').css(swatchStyle);
+                spanOuter.attr({
+                    'title': formattedString,
+                    'data-color': tiny.toRgbString(),
+                    'role': 'button',
+                    'tabindex': 0,
+                }).addClass(c).append(spanInner);
             } else {
-                html.push('<span class="sp-thumb-el sp-clear-display" role="button" tabindex="0"><span class="sp-clear-palette-only" style="background-color: transparent;"></span></span>');
+                spanInner.addClass('sp-clear-palette-only').css({'background-color': 'transparent'});
+                spanOuter.addClass('sp-thumb-el sp-clear-display').attr({
+                    'role': 'button',
+                    'tabindex': 0,
+                }).append(spanInner);
             }
+
+            html.append(spanOuter);
         }
-        return "<div class='sp-cf " + className + "'>" + html.join('') + "</div>";
+        return html;
     }
 
     function hideAll() {
@@ -638,24 +653,24 @@
 
             var currentColor = get();
 
-            var html = $.map(paletteArray, function (palette, i) {
+            var palettes = $.map(paletteArray, function (palette, i) {
                 return paletteTemplate(palette, currentColor, "sp-palette-row sp-palette-row-" + i, opts);
             });
 
             updateSelectionPaletteFromStorage();
 
             if (selectionPalette) {
-                html.push(paletteTemplate(getUniqueSelectionPalette(), currentColor, "sp-palette-row sp-palette-row-selection", opts));
+                palettes.push(paletteTemplate(getUniqueSelectionPalette(), currentColor, "sp-palette-row sp-palette-row-selection", opts));
             }
 
-            paletteContainer.html(html.join(""));
+            paletteContainer.empty().append(palettes);
         }
 
         function drawInitial() {
             if (opts.showInitial) {
                 var initial = colorOnShow;
                 var current = get();
-                initialColorContainer.html(paletteTemplate([initial, current], current, "sp-palette-row-initial", opts));
+                initialColorContainer.empty().append(paletteTemplate([initial, current], current, "sp-palette-row-initial", opts));
             }
         }
 

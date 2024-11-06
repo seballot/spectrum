@@ -3,8 +3,6 @@
     top:0;
     left:0;
     display:inline-block;
-    *display: inline;
-    *zoom: 1;
     /* https://github.com/seballot/spectrum/issues/40 */
     z-index: 9999994;
     overflow: hidden;
@@ -243,7 +241,6 @@ input.spectrum.with-add-on {
 /* Clearfix hack */
 .sp-cf:before, .sp-cf:after { content: ""; display: table; }
 .sp-cf:after { clear: both; }
-.sp-cf { *zoom: 1; }
 
 /* Mobile devices, make hue slider bigger so it is easier to slide */
 @media (max-device-width: 480px) {
